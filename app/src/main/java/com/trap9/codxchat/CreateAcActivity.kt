@@ -1,5 +1,6 @@
 package com.trap9.codxchat
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -7,7 +8,6 @@ import android.widget.Toast
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_create_ac.*
 
@@ -28,7 +28,7 @@ class CreateAcActivity : AppCompatActivity() {
             var email = edt_createac_email.text.toString().trim()
             var password = edt_createac_password.text.toString().trim()
 
-            if(TextUtils.isEmpty(display_name) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
+            if(!TextUtils.isEmpty(display_name) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
                 mAuth!!.createUserWithEmailAndPassword(email,password).addOnCompleteListener { 
                     task: Task<AuthResult> ->
 
@@ -49,6 +49,10 @@ class CreateAcActivity : AppCompatActivity() {
 
                             if(task.isSuccessful){
                                 Toast.makeText(this,"Create Successful",Toast.LENGTH_LONG).show()
+                                var intent = Intent(this,DashboardActivity::class.java)
+                                intent.putExtra("userId",userId)
+                                startActivity(intent)
+                                finish()
                             }else
                                 Toast.makeText(this,"Create Unsuccessful",Toast.LENGTH_LONG).show()
                         }
