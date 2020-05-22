@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
     var mAuth: FirebaseAuth? = null
+    var mAuthListener: FirebaseAuth.AuthStateListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,24 +24,40 @@ class MainActivity : AppCompatActivity() {
 
         mAuth = FirebaseAuth.getInstance()
 
-        var email = edt_email_login.text.toString().trim()
-        var password = edt_password_login.text.toString().trim()
+        mAuthListener = FirebaseAuth.AuthStateListener {
+                firebaseAuth: FirebaseAuth ->
+            var user = firebaseAuth.currentUser
 
-        if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
-            mAuth!!.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task: Task<AuthResult> ->
-                    if (task.isSuccessful) {
-                        Toast.makeText(this, "Login Successful", Toast.LENGTH_LONG).show()
-                        var intent = Intent(this, DashboardActivity::class.java)
-                        intent.putExtra("userId", mAuth!!.currentUser!!.uid)
-                        startActivity(intent)
-                        finish()
-                    } else {
-                        Toast.makeText(this, "Login Unsuccessful", Toast.LENGTH_LONG).show()
-                    }
-                }
-        } else {
+            if(user != null) {
+                var intent = Intent(this, DashboardActivity::class.java)
+                startActivity(intent)
+                finish()
+            } else {
             Toast.makeText(this, "Please put your email and password", Toast.LENGTH_LONG).show()
+        }
+        }
+
+
+        btn_login.setOnClickListener {
+            var email = edt_email_login.text.toString().trim()
+            var password = edt_password_login.text.toString().trim()
+
+            if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
+                mAuth!!.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task: Task<AuthResult> ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(this, "Login Successful", Toast.LENGTH_LONG).show()
+                            var intent = Intent(this, DashboardActivity::class.java)
+                            intent.putExtra("userId", mAuth!!.currentUser!!.uid)
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            Toast.makeText(this, "Login Unsuccessful", Toast.LENGTH_LONG).show()
+                        }
+                    }
+            } else {
+                Toast.makeText(this, "Please put your email and password", Toast.LENGTH_LONG).show()
+            }
         }
 
         btn_forgotpassword.setOnClickListener{
@@ -52,5 +69,16 @@ class MainActivity : AppCompatActivity() {
             var intent = Intent (this,CreateAcActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mAuth!!.addAuthStateListener(mAuthListener!!)
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        mAuth!!.removeAuthStateListener(mAuthListener!!)
     }
 }
