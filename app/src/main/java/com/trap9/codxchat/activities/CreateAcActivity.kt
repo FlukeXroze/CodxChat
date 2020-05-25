@@ -67,8 +67,8 @@ class CreateAcActivity : AppCompatActivity() {
                 intent.putExtra("userId",userId)
                 startActivity(intent)
                 finish()
-            }else
-                Toast.makeText(this,"Create Unsuccessful",Toast.LENGTH_LONG).show()
+            }else{
+                Toast.makeText(this,"Create Unsuccessful",Toast.LENGTH_LONG).show()}
         }
     }
 }

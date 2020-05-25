@@ -17,5 +17,12 @@ class DashboardActivity : AppCompatActivity() {
 
         mAuth = FirebaseAuth.getInstance()
 
+        button.setOnClickListener{
+            mAuth!!.signOut()
+            var intent = Intent(this,MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
     }
 }
