@@ -33,18 +33,22 @@ class CreateAcActivity : AppCompatActivity() {
             createUser(display_name,email,password,confirm)
         }
     }
-    private fun createUser(display_name: String,email:String,password:String,confirm:String){
-        if(!TextUtils.isEmpty(display_name) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(confirm)){
-            if (confirm != password) {
-                Toast.makeText(this, "Password is not match", Toast.LENGTH_LONG).show()
-            }}else{
-            mAuth!!.createUserWithEmailAndPassword(email,password).addOnCompleteListener {
-                    task: Task<AuthResult> ->
+    private fun createUser(display_name: String,email:String,password:String,confirm:String) {
+        if (!TextUtils.isEmpty(display_name) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(
+                password) && !TextUtils.isEmpty(confirm)){
+            if (confirm == password) {
+                mAuth!!.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener{ task: Task<AuthResult> ->
 
-                if(task.isSuccessful) {
-                    sendUserDataToFirebase(display_name)
-                }
+                        if (task.isSuccessful) {
+                            sendUserDataToFirebase(display_name)
+                        }
+                    }
+            }else{
+                Toast.makeText(this, "Password is not match", Toast.LENGTH_LONG).show()
             }
+        }else{
+            Toast.makeText(this, "Please put your your information", Toast.LENGTH_LONG).show()
         }
     }
     private fun sendUserDataToFirebase(display_name: String){
