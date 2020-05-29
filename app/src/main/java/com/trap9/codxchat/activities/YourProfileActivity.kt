@@ -1,5 +1,6 @@
 package com.trap9.codxchat.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.firebase.auth.FirebaseAuth
@@ -9,6 +10,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import com.trap9.codxchat.R
+import kotlinx.android.synthetic.main.activity_create_ac.*
 import kotlinx.android.synthetic.main.activity_your_profile.*
 
 class YourProfileActivity : AppCompatActivity() {
@@ -42,10 +44,11 @@ class YourProfileActivity : AppCompatActivity() {
 
                 if (image != null)
                     Picasso.get().load(image).placeholder(R.drawable.ic_person).into(iv_image_profile)
-
             }
-
         })
+        btn_edit_profile.setOnClickListener{
+        var intent = Intent(this,UpdateProfileActivity::class.java)
+        startActivity(intent)}
     }
 
 }
